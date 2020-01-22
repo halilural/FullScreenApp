@@ -1,7 +1,8 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
-	"sap/ui/model/json/JSONModel"
-], function (Controller, JSONModel) {
+	"sap/ui/model/json/JSONModel",
+	"sap/m/MessageBox"
+], function (Controller, JSONModel, MessageBox) {
 	"use strict";
 
 	return Controller.extend("FullScreenApp.controller.View1", {
@@ -30,6 +31,7 @@ sap.ui.define([
 				sPath = "/PurchaseOrderSet",
 				oData = {},
 				mParameters = {};
+			var bCompact = !!this.getView().$().closest(".sapUiSizeCompact").length;
 
 			oData.Ponumber = this._oView.getModel("viewModel").getProperty("/PoNumber");
 			oData.Lifnr = this._oView.getModel("viewModel").getProperty("/Lifnr");
@@ -38,13 +40,23 @@ sap.ui.define([
 
 			mParameters.success = function (oData2, oResponse) {
 				debugger;
-
 				var oBinding = this._oTable.getBinding("items");
 				oBinding.filter([]);
+
+				MessageBox.success(
+					"Satınalma Kaydı Başarılı!", {
+						styleClass: bCompact ? "sapUiSizeCompact" : ""
+					}
+				);
 
 			}.bind(this);
 			mParameters.error = function (oError) {
 				debugger;
+				MessageBox.error(
+					"Satınalma Kaydı Oluşturulamadı!", {
+						styleClass: bCompact ? "sapUiSizeCompact" : ""
+					}
+				);
 			};
 
 			oModel.create(sPath, oData, mParameters);
